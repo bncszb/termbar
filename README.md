@@ -1,15 +1,12 @@
-<p align="center"><a href="//writebar.js.org" title="writebar.js.org"><img src="assets/logo.svg"/></a></p>
-<h1 align="center">WriteBar</h1>
-<p align="center">
-  Experimental distraction-free text editor,<br/>
-  that displays focus text line right over the keyboard (on the Macbook Pro TouchBar).
-</p>
-<h2 align="center">
-  <a title="Change Log at GitHub" href="//github.com/alexander-shvets/writebar/releases">Releases</a>
-  : 
-  <a title="Download from GitHub" href="//github.com/alexander-shvets/writebar/releases/download/0.2.1/WriteBar.dmg">0.2.1-alpha.dmg</a>
-</h2>
-<p align="center"><a href="//facebook.com/groups/uxclubs/permalink/973396292808999/"><img width="600" src="assets/screenshot.jpg" alt="screenshot"/></a></p>
+## My stuff
+
+Electron 1.7.12 had to be installed, the package ran fine, but the "dev mode" did not:
+yarn add electron@v1.7.12
+
+- TODO
+  - events:
+    - key but not enter
+    - key and enter
 
 ### Features
 

@@ -15,9 +15,10 @@
   },
   "dependencies": {
     "@slite/quill-delta-markdown": "alexjohnporter/quill-delta-markdown",
+    "childprocess": "^2.0.2",
+    "electron": "1.7.12",
     "quill": "^1.3.5",
     "quill-focus": "amka/quill-focus",
     "quill-markdown-shortcuts": "patleeman/quill-markdown-shortcuts"
-  },
-  "devDependencies": {}
+  }
 }

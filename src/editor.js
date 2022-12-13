@@ -1,5 +1,7 @@
 const {ipcRenderer, remote: {Menu, getCurrentWindow}} = require('electron')
+const Delta = require('quill-delta')
 const {menu} = require('./menu')
+const { exec, spawn } = require('child_process')
 
 Menu.setApplicationMenu(Menu.buildFromTemplate( menu ))
 
@@ -7,6 +9,16 @@ const touchbarSizeInChars = 104
 const caretSymbol = "⎸"
 
 const {log} = console
+
+
+const terminal=spawn("sh")
+terminal.stdout.setEncoding('utf8');
+
+
+
+
+
+
 
 Quill.register('modules/focus', Focus)
 
@@ -30,9 +42,12 @@ quill.focus()
 window.quill = quill
 window.documentNotSaved = true
 
+let last_line="012"
+let current_line="412"
+let outout_printed=true
+
 
 quill.on('editor-change', (eventName, ...args) => {
-    
     let range = {length: 1, index:0},
         insert = '',
         old, source
@@ -58,9 +73,12 @@ quill.on('editor-change', (eventName, ...args) => {
         // args[0] will be old range
         [range, old, source] = args
     }
+    // Start is the index value of the character after the last \n
+    // This should be the last command to run
 
     if( range && 'index' in range ){
         const {index, length} = range
+        console.log(range)
         let start = index, size = length
         if( size === 0 ){
             while( 
@@ -70,10 +88,46 @@ quill.on('editor-change', (eventName, ...args) => {
             size = touchbarSizeInChars
         }
         let text = quill.getText(start, size)
+
+
+        if(index-start == 0 ){
+            last_line=current_line
+            if (outout_printed===false) {
+
+                outout_printed=true
+                
+                // quill.insertText(index, "You have pressed ENTER\n")
+                console.log(current_line)
+                terminal.stdin.write(current_line);
+                
+                let output= null
+                terminal.stdout.on('data', (data) => {
+                    // output=data.toString();
+                    console.log(`Received chunk ${data}`)
+                });
+                
+                quill.updateContents(new Delta().insert(index, "Output: \n"+output))
+                
+                // quill.updateContents(new Delta().insert("data"))
+
+            }
+        } else {
+            current_line=quill.getText(start, index-start)
+            if (current_line.length>2)[
+                outout_printed=false
+            ]
+        }
+        
+        // console.log("Current line", current_line)
+        // console.log("Last line", last_line)
+
         if( length === 0 ){
+
             const caret = index - start
             text = text.substr(0, caret) + insert + caretSymbol + text.substr(caret)
+
         }
+
         ipcRenderer.send('update-touchbar', {text})
 
         quill.container.classList.add('quill-focus')
